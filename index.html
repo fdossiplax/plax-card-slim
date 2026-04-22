@@ -318,18 +318,19 @@
       const blueEnd = Math.round(W * 0.462);
       const MAX_W   = blueEnd - X - Math.round(25 * scaleX);
 
-      // Font sizes calibrati su 313px alto
-      const fNome    = Math.round(38 * scaleY);
+      // Font sizes calibrati su 313px alto (misurati dal PNG reale)
+      const fNome    = Math.round(38 * scaleY);  // cluster h=33px
       const fNomeMin = Math.round(20 * scaleY);
-      const fRuolo   = Math.round(23 * scaleY);
+      const fRuolo   = Math.round(23 * scaleY);  // cluster h=40px
       const fRuoloMin= Math.round(11 * scaleY);
-      const fSmall   = Math.round(18 * scaleY);
+      const fMobile  = Math.round(34 * scaleY);  // stesso peso visivo del nome
+      const fEmail   = Math.round(34 * scaleY);
 
-      // Y baseline calibrate su 313px alto
-      const yNome   = Math.round(86  * scaleY);
-      const yRuolo  = Math.round(117 * scaleY);
-      const yMobile = Math.round(167 * scaleY);
-      const yEmail  = Math.round(193 * scaleY);
+      // Y baseline calibrate sul PNG reale 1250x313
+      const yNome   = Math.round(75  * scaleY);  // baseline cluster 42-75
+      const yRuolo  = Math.round(137 * scaleY);  // baseline cluster 97-137
+      const yMobile = Math.round(224 * scaleY);  // baseline cluster 199-224 (allineato PLAX S.p.A.)
+      const yEmail  = Math.round(271 * scaleY);  // baseline cluster 245-271
 
       // ── Nome completo — bianco, SEMPRE bold ──
       if (d.nome) {
@@ -357,7 +358,7 @@
 
       // ── Mobile — bianco, tronca se troppo lungo ──
       if (d.mobile) {
-        ctx.font = fSmall + 'px "Assistant", Arial, sans-serif';
+        ctx.font = fMobile + 'px "Assistant", Arial, sans-serif';
         ctx.fillStyle = '#ffffff';
         let mobile = 'Mobile: ' + d.mobile;
         while (ctx.measureText(mobile).width > MAX_W && mobile.length > 10)
@@ -367,7 +368,7 @@
 
       // ── Email — bianco, tronca se troppo lunga ──
       if (d.email) {
-        ctx.font = fSmall + 'px "Assistant", Arial, sans-serif';
+        ctx.font = fEmail + 'px "Assistant", Arial, sans-serif';
         ctx.fillStyle = '#ffffff';
         let email = 'Email: ' + d.email;
         while (ctx.measureText(email).width > MAX_W && email.length > 10)
@@ -412,7 +413,7 @@
 
     // Attende caricamento font prima di renderizzare
     document.fonts.load('bold 38px "Assistant"').then(() => {
-      document.fonts.load('18px "Assistant"').then(() => renderPreview());
+      document.fonts.load('34px "Assistant"').then(() => renderPreview());
     }).catch(() => renderPreview());
   </script>
 
