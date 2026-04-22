@@ -1,1 +1,0 @@
-# plax-card-slim
