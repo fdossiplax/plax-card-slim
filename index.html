@@ -384,6 +384,41 @@
       drawCard(ctx, 1250, 313, getData());
     }
 
+    // ─── Tracking → Zoho Forms ────────────────────────────────────────────────
+    // Form: "Tracking Inserimento Dati Firma Aziendale"
+    const ZOHO_FORM_URL = 'https://forms.zohopublic.com/plaxgroup/form/FormDatiFirmaAziendale/formperma/QBKFOolCfIR3AkIkUkE8Cqr67MGbhqHRWr_CxQxS8dI/htmlRecords/submit';
+
+    // ⚠️ Sostituisci i valori con i Field Name reali del tuo form Zoho:
+    // Zoho Forms → apri il form → clicca su ogni campo → "Field Name" nel pannello laterale
+    const ZOHO_FIELDS = {
+      nome:   'SingleLine',   // Nome Completo
+      ruolo:  'SingleLine1',  // Posizione Lavorativa
+      sede:   'SingleLine2',  // Sede
+      mobile: 'SingleLine3',  // Mobile
+      email:  'SingleLine4',  // Email
+    };
+
+    function trackDownload(d) {
+      try {
+        const body = new URLSearchParams();
+        body.append(ZOHO_FIELDS.nome,   d.nome   || '');
+        body.append(ZOHO_FIELDS.ruolo,  d.ruolo  || '');
+        body.append(ZOHO_FIELDS.mobile, d.mobile || '');
+        body.append(ZOHO_FIELDS.email,  d.email  || '');
+        body.append(ZOHO_FIELDS.sede,   d.sede   || '');
+        body.append('zf_referrer', window.location.href);
+        body.append('zf_redirect', '');
+        body.append('zc_gad',      '');
+
+        fetch(ZOHO_FORM_URL, {
+          method:  'POST',
+          mode:    'no-cors', // Zoho Forms non supporta CORS — no-cors è corretto
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body:    body.toString()
+        }).catch(() => {}); // silenzioso — il download avviene comunque
+      } catch(e) {}
+    }
+
     function downloadPNG() {
       const d = getData();
       if (!d.sede)             { alert('Seleziona la sede prima di scaricare.');                return; }
@@ -404,6 +439,9 @@
       link.download = 'firma_' + (d.nome || 'plax').replace(/\s+/g, '_') + '.png';
       link.href = off.toDataURL('image/png');
       link.click();
+
+      // Traccia il download su Google Sheets
+      trackDownload(d);
 
       setTimeout(() => {
         btn.textContent = 'Scarica firma PNG';
